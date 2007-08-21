@@ -1,0 +1,19 @@
+#measurement tracker
+include "RecoTracker/GeometryESProducer/data/TrackerRecoGeometryESProducer.cfi"
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+include "RecoTracker/MeasurementDet/data/MeasurementTrackerESProducer.cfi"
+
+# with no pixel (optional)
+#es_module MeasurementTrackerNoPixel = MeasurementTrackerESProducer  from "RecoTracker/MeasurementDet/data/MeasurementTrackerESProducer.cfi"
+#replace MeasurementTrackerNoPixel.ComponentName = "MeasurementTrackerNoPixel"
+#replace MeasurementTrackerNoPixel.pixelClusterProducer = ""
+
+
+#stepping helix propagator anydirection
+include "TrackPropagation/SteppingHelixPropagator/data/SteppingHelixPropagatorAny.cfi"
+
+include "RecoMuon/L3TrackFinder/data/MuonRoadTrajectoryBuilderESProducer.cfi"
+#replace MuonRoadTrajectoryBuilderESProducer.MeasurementTrackerName = "MeasurementTrackerNoPixel"

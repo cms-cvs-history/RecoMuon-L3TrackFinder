@@ -1,0 +1,19 @@
+es_module muonRoadTrajectoryBuilderESProducer = MuonRoadTrajectoryBuilderESProducer{
+       #category: MuonRoadTrajectoryBuilder
+	string ComponentName = "muonRoadTrajectoryBuilder"
+	string measurementTrackerName = ""
+	string propagatorName = "SteppingHelixPropagatorAny"
+    
+	double maxChi2Road = 40.0
+    	double maxChi2Hit = 40.0
+	    
+	uint32 maxTrajectories = 30
+	    
+	bool dynamicMaxNumberOfHitPerModule = true
+	vuint32 maxTrajectoriesThreshold = { 10, 25 }
+	vuint32 numberOfHitPerModuleThreshold = { 3, 1 }
+	uint32 numberOfHitPerModule = 1000 #no cut then
+	    
+	uint32 minNumberOfHitOnCandidate = 4
+	bool outputAllTraj =true
+}
