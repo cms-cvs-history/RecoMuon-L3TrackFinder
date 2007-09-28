@@ -4,14 +4,12 @@ es_module MuonCkfTrajectoryBuilder = MuonCkfTrajectoryBuilderESProducer
   string MeasurementTrackerName = ""
 
   ### nested parameter set for TrackerTrajectoryBuilder
-  PSet BaseCkfTrajectoryBuilderParameters =
-  {
+##  PSet BaseCkfTrajectoryBuilderParameters =
       int32  maxLostHit           = 1   
       int32  maxConsecLostHit     = 1
       int32  minimumNumberOfHits  = 5   
       double ptCut                = 0.9
       int32  maxNumberOfHits      = -1
-  }     
 
 
   int32  maxCand              = 5
