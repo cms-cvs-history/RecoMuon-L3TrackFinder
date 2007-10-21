@@ -10,7 +10,7 @@ es_module MuonCkfTrajectoryBuilder = MuonCkfTrajectoryBuilderESProducer
       int32  minimumNumberOfHits  = 5   
       double ptCut                = 0.9
       int32  maxNumberOfHits      = -1
-
+      double chargeSignificance   = -1.
 
   int32  maxCand              = 5
   double lostHitPenalty       = 30.
