@@ -34,5 +34,23 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 # MeasurementTracker
 include "RecoTracker/MeasurementDet/data/MeasurementTrackerESProducer.cfi"
 
+# trajectory filtering
+## do no duplicate the module in order to be able to later replace its values
+## later on, L3Muon might need a specific TrajectoryFilter adapted to online purpose
+es_module muonCkfTrajectoryFilter = trajectoryFilterESProducer {
+	string ComponentName = "muonCkfTrajectoryFilter"
+	PSet filterPSet = {
+		string ComponentType = "CkfBaseTrajectoryFilter"
+		int32  maxLostHit           = 1
+		int32  maxConsecLostHit     = 1
+		int32  minimumNumberOfHits  = 5
+		double minPt                = 0.9
+		double nSigmaMinPt = 5.0
+		int32 minHitsMinPt = -1
+		int32  maxNumberOfHits      = -1
+		double chargeSignificance   = -1.
+	}
+}
+
 ##############################################
 include "RecoMuon/L3TrackFinder/data/MuonCkfTrajectoryBuilderESProducer.cfi"

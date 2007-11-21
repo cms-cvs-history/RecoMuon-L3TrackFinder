@@ -2,15 +2,7 @@ es_module MuonCkfTrajectoryBuilder = MuonCkfTrajectoryBuilderESProducer
 {
   string ComponentName = "muonCkfTrajectoryBuilder"
   string MeasurementTrackerName = ""
-
-  ### nested parameter set for TrackerTrajectoryBuilder
-##  PSet BaseCkfTrajectoryBuilderParameters =
-      int32  maxLostHit           = 1   
-      int32  maxConsecLostHit     = 1
-      int32  minimumNumberOfHits  = 5   
-      double ptCut                = 0.9
-      int32  maxNumberOfHits      = -1
-      double chargeSignificance   = -1.
+  string trajectoryFilterName = "muonCkfTrajectoryFilter"
 
   int32  maxCand              = 5
   double lostHitPenalty       = 30.
