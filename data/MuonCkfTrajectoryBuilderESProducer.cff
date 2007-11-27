@@ -46,7 +46,7 @@ es_module muonCkfTrajectoryFilter = trajectoryFilterESProducer {
 		int32  minimumNumberOfHits  = 5
 		double minPt                = 0.9
 		double nSigmaMinPt = 5.0
-		int32 minHitsMinPt = -1
+		int32 minHitsMinPt = 3
 		int32  maxNumberOfHits      = -1
 		double chargeSignificance   = -1.
 	}
