@@ -39,7 +39,7 @@ include "RecoTracker/MeasurementDet/data/MeasurementTrackerESProducer.cfi"
 ## later on, L3Muon might need a specific TrajectoryFilter adapted to online purpose
 es_module muonCkfTrajectoryFilter = trajectoryFilterESProducer {
 	string ComponentName = "muonCkfTrajectoryFilter"
-	PSet filterPSet = {
+	PSet filterPset = {
 		string ComponentType = "CkfBaseTrajectoryFilter"
 		int32  maxLostHit           = 1
 		int32  maxConsecLostHit     = 1
