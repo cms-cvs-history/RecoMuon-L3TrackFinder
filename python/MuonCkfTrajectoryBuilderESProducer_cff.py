@@ -1,7 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
 # initialize magnetic field #########################
-from MagneticField.Engine.volumeBasedMagneticField_cfi import *
 # initialize geometry #####################
 from Geometry.CMSCommonData.cmsIdealGeometryXML_cfi import *
 from Geometry.TrackerGeometryBuilder.trackerGeometry_cfi import *
@@ -45,5 +44,6 @@ muonCkfTrajectoryFilter = cms.ESProducer("TrajectoryFilterESProducer",
     ),
     ComponentName = cms.string('muonCkfTrajectoryFilter')
 )
+
 
 
