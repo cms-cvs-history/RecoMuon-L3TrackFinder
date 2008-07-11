@@ -1,5 +1,4 @@
 ############ initialize magnetic field #########################
-include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
 
 ############### initialize geometry #####################
 include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
