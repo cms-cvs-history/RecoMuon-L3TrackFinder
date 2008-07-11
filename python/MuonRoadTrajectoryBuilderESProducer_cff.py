@@ -2,7 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 #measurement tracker
 from RecoTracker.GeometryESProducer.TrackerRecoGeometryESProducer_cfi import *
-from Geometry.TrackerGeometryBuilder.trackerGeometry_cfi import *
 from RecoLocalTracker.SiPixelRecHits.PixelCPEParmError_cfi import *
 from RecoLocalTracker.SiStripRecHitConverter.StripCPEfromTrackAngle_cfi import *
 from RecoLocalTracker.SiStripRecHitConverter.SiStripRecHitMatcher_cfi import *
