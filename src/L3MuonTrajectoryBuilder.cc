@@ -12,8 +12,8 @@
  *   in the muon system and the tracker.
  *
  *
- *  $Date: 2008/12/12 21:20:00 $
- *  $Revision: 1.13 $
+ *  $Date: 2008/12/15 18:22:55 $
+ *  $Revision: 1.13.2.1 $
  *
  *  Authors :
  *  N. Neumeister            Purdue University
@@ -114,7 +114,7 @@ void L3MuonTrajectoryBuilder::setEvent(const edm::Event& event) {
       << "Found " << allTrackerTracks->size() 
       << " tracker Tracks with label "<< theTkCollName;  
   if (event.getByLabel(theTkCollName,handleTrackerTrajs) && event.getByLabel(theTkCollName,tkAssoMap)) {
-    theTkTrajsAvailableFlag = true;
+    theTkTrajsAvailableFlag = false; //aaa
     allTrackerTrajs = &*handleTrackerTrajs;  
   }
 
@@ -136,7 +136,7 @@ MuonCandidate::CandidateContainer L3MuonTrajectoryBuilder::trajectories(const Tr
 
   // convert the STA track into a Trajectory if Trajectory not already present
   TrackCand staCand(staCandIn);
-  addTraj(staCand);
+  //addTraj(staCand);
 
   vector<TrackCand> trackerTracks;
 
