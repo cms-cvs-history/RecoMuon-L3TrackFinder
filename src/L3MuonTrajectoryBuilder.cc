@@ -12,8 +12,8 @@
  *   in the muon system and the tracker.
  *
  *
- *  $Date: 2008/10/23 19:00:53 $
- *  $Revision: 1.12 $
+ *  $Date: 2008/12/12 21:20:00 $
+ *  $Revision: 1.13 $
  *
  *  Authors :
  *  N. Neumeister            Purdue University
@@ -107,6 +107,17 @@ void L3MuonTrajectoryBuilder::setEvent(const edm::Event& event) {
     
   theTkBuilder->setEvent(event);
     
+  // get tracker TrackCollection from Event
+  edm::Handle<std::vector<Trajectory> > handleTrackerTrajs;
+  event.getByLabel(theTkCollName,allTrackerTracks);
+  LogInfo(category) 
+      << "Found " << allTrackerTracks->size() 
+      << " tracker Tracks with label "<< theTkCollName;  
+  if (event.getByLabel(theTkCollName,handleTrackerTrajs) && event.getByLabel(theTkCollName,tkAssoMap)) {
+    theTkTrajsAvailableFlag = true;
+    allTrackerTrajs = &*handleTrackerTrajs;  
+  }
+
   theTrajsAvailable = event.getByLabel(theTkCollName,theTkTrajCollection);
   LogDebug(category)<<"theTrajsAvailableFlag " << theTrajsAvailable ;
   theTkCandsAvailable = event.getByLabel(theTkCollName,theTkTrackCandCollection);
@@ -187,21 +198,35 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
 
   const std::string category = "Muon|RecoMuon|L3MuonTrajectoryBuilder|makeTkCandCollection";
 
-  vector<TrackCand> tkCandColl;  
-
-  if (theTrajsAvailable) {
-    LogDebug(category) << "Found " << theTkTrajCollection->size() <<" tkCands";
-    for (TC::const_iterator tt=theTkTrajCollection->begin();tt!=theTkTrajCollection->end();++tt){
-      tkCandColl.push_back(TrackCand(new Trajectory(*tt),reco::TrackRef()));
-      LogDebug(category)<< "seedRef " << tkCandColl.back().first->seedRef().isNonnull();
-    } 
-    LogTrace(category) << "Found " << tkCandColl.size() << " tkCands from seeds";
-    return tkCandColl;
+  vector<TrackCand> tkCandColl;
+  
+  vector<TrackCand> tkTrackCands;
+  
+  if ( theTkTrajsAvailableFlag ) {
+    for(TrajTrackAssociationCollection::const_iterator it = tkAssoMap->begin(); it != tkAssoMap->end(); ++it){	
+      const Ref<vector<Trajectory> > traj = it->key;
+      const reco::TrackRef tk = it->val;
+      TrackCand tkCand = TrackCand(0,tk);
+      //      if( traj->isValid() ) tkCand.first = &*traj ;
+      if( traj->isValid() ) tkCand.first = new Trajectory(*traj) ;
+      tkTrackCands.push_back(tkCand);
+      //
+      tkCandColl.push_back(tkCand);
+    }
   } else {
-    LogDebug(category) << "theTrajsAvailable is FALSE";
+    for ( unsigned int position = 0; position != allTrackerTracks->size(); ++position ) {
+      LogDebug(category);
+      reco::TrackRef tkTrackRef(allTrackerTracks,position);
+      TrackCand tkCand = TrackCand(0,tkTrackRef);
+      tkTrackCands.push_back(tkCand); 
+      //
+      tkCandColl.push_back(tkCand);
+    }
   }
-
+  
+  //tkCandColl = chooseRegionalTrackerTracks(staCand,tkTrackCands);
+  
   return tkCandColl;
+  
 }
-
 
