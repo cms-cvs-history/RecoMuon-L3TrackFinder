@@ -12,8 +12,8 @@
  *   in the muon system and the tracker.
  *
  *
- *  $Date: 2008/12/15 22:13:01 $
- *  $Revision: 1.13.2.2 $
+ *  $Date: 2008/12/16 04:21:16 $
+ *  $Revision: 1.13.2.3 $
  *
  *  Authors :
  *  N. Neumeister            Purdue University
@@ -44,6 +44,8 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/MuonSeed/interface/L3MuonTrajectorySeed.h"
+#include "DataFormats/MuonSeed/interface/L3MuonTrajectorySeedCollection.h"
 
 #include "RecoMuon/TrackingTools/interface/MuonCandidate.h"
 #include "RecoMuon/TrackingTools/interface/MuonServiceProxy.h"
@@ -209,7 +211,7 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
       TrackCand tkCand = TrackCand(0,tk);
       //      if( traj->isValid() ) tkCand.first = &*traj ;
       if( traj->isValid() ) tkCand.first = new Trajectory(*traj) ;
-      tkTrackCands.push_back(tkCand);
+      //tkTrackCands.push_back(tkCand);
       //
       tkCandColl.push_back(tkCand);
     }
@@ -218,7 +220,7 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
       LogDebug(category);
       reco::TrackRef tkTrackRef(allTrackerTracks,position);
       TrackCand tkCand = TrackCand(0,tkTrackRef);
-      tkTrackCands.push_back(tkCand); 
+      //tkTrackCands.push_back(tkCand); 
       //
       tkCandColl.push_back(tkCand);
     }
@@ -226,7 +228,16 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
   
   //tkCandColl = chooseRegionalTrackerTracks(staCand,tkTrackCands);
   
-  return tkCandColl;
+  //
+  for(vector<TrackCand>::const_iterator tk = tkCandColl.begin(); tk != tkCandColl.end() ; ++tk) { 
+    edm::Ref<L3MuonTrajectorySeedCollection> l3seedRef = (*tk).second->seedRef().castTo<edm::Ref<L3MuonTrajectorySeedCollection> >() ;
+    reco::TrackRef staTrack = l3seedRef->l2Track();
+    if(staTrack == (staCand.second) ) tkTrackCands.push_back(*tk);
+  }
+  //
+
+  //return tkCandColl;
+  return tkTrackCands;
   
 }
 
