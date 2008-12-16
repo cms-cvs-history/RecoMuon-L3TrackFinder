@@ -12,8 +12,8 @@
  *   in the muon system and the tracker.
  *
  *
- *  $Date: 2008/12/15 18:22:55 $
- *  $Revision: 1.13.2.1 $
+ *  $Date: 2008/12/15 22:13:01 $
+ *  $Revision: 1.13.2.2 $
  *
  *  Authors :
  *  N. Neumeister            Purdue University
@@ -94,17 +94,15 @@ L3MuonTrajectoryBuilder::~L3MuonTrajectoryBuilder() {
 void L3MuonTrajectoryBuilder::setEvent(const edm::Event& event) {
   
   const std::string category = "Muon|RecoMuon|L3MuonTrajectoryBuilder|setEvent";
-    
+  
   GlobalTrajectoryBuilderBase::setEvent(event);
-    
-    
-  if (theFirstEvent) {
-      
+  
+  if (theFirstEvent) {    
     theFirstEvent = false;
     LogInfo(category) << "Constructing a Tk Trajectory Builder";
     GlobalTrajectoryBuilderBase::service()->eventSetup().get<CkfComponentsRecord>().get(theTkBuilderName,theTkBuilder);  
   }
-    
+  
   theTkBuilder->setEvent(event);
     
   // get tracker TrackCollection from Event
@@ -114,13 +112,13 @@ void L3MuonTrajectoryBuilder::setEvent(const edm::Event& event) {
       << "Found " << allTrackerTracks->size() 
       << " tracker Tracks with label "<< theTkCollName;  
   if (event.getByLabel(theTkCollName,handleTrackerTrajs) && event.getByLabel(theTkCollName,tkAssoMap)) {
-    theTkTrajsAvailableFlag = false; //aaa
+    theTkTrajsAvailableFlag = true; //aaa
     allTrackerTrajs = &*handleTrackerTrajs;  
   }
 
-  theTrajsAvailable = event.getByLabel(theTkCollName,theTkTrajCollection);
-  LogDebug(category)<<"theTrajsAvailableFlag " << theTrajsAvailable ;
-  theTkCandsAvailable = event.getByLabel(theTkCollName,theTkTrackCandCollection);
+  //theTrajsAvailable = event.getByLabel(theTkCollName,theTkTrajCollection);
+  //LogDebug(category)<<"theTrajsAvailableFlag " << theTrajsAvailable ;
+  //theTkCandsAvailable = event.getByLabel(theTkCollName,theTkTrackCandCollection);
   
 }
 
@@ -130,16 +128,15 @@ void L3MuonTrajectoryBuilder::setEvent(const edm::Event& event) {
 MuonCandidate::CandidateContainer L3MuonTrajectoryBuilder::trajectories(const TrackCand& staCandIn) {
 
   const std::string category = "Muon|RecoMuon|L3MuonTrajectoryBuilder|trajectories";
-
+  
   // cut on muons with low momenta
   if ( (staCandIn).second->pt() < thePtCut || (staCandIn).second->innerMomentum().Rho() < thePtCut || (staCandIn).second->innerMomentum().R() < 2.5 ) return CandidateContainer();
-
+  
   // convert the STA track into a Trajectory if Trajectory not already present
   TrackCand staCand(staCandIn);
-  //addTraj(staCand);
-
+  
   vector<TrackCand> trackerTracks;
-
+  
   vector<TrackCand> regionalTkTracks = makeTkCandCollection(staCand);
   LogInfo(category) << "Found " << regionalTkTracks.size() << " tracks within region of interest";  
   
@@ -157,14 +154,17 @@ MuonCandidate::CandidateContainer L3MuonTrajectoryBuilder::trajectories(const Tr
   CandidateContainer tkTrajs;
   for (vector<TrackCand>::const_iterator tkt = trackerTracks.begin(); tkt != trackerTracks.end(); tkt++) {
     if ((*tkt).first != 0 && (*tkt).first->isValid()) {
-
+      //
       MuonCandidate* muonCand = new MuonCandidate( 0 ,staCand.second,(*tkt).second, new Trajectory(*(*tkt).first));
       tkTrajs.push_back(muonCand);
-      LogTrace(category) << "tpush";
-
+      //      LogTrace(category) << "tpush";
+      //
+    } else {
+      MuonCandidate* muonCand = new MuonCandidate( 0 ,staCand.second,(*tkt).second, 0);
+      tkTrajs.push_back(muonCand);
     }
   }
-  
+    
   if ( tkTrajs.empty() )  {
     LogInfo(category) << "tkTrajs empty";
     return CandidateContainer();
@@ -203,7 +203,7 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
   vector<TrackCand> tkTrackCands;
   
   if ( theTkTrajsAvailableFlag ) {
-    for(TrajTrackAssociationCollection::const_iterator it = tkAssoMap->begin(); it != tkAssoMap->end(); ++it){	
+    for(TrajTrackAssociationCollection::const_iterator it = tkAssoMap->begin(); it != tkAssoMap->end(); ++it){
       const Ref<vector<Trajectory> > traj = it->key;
       const reco::TrackRef tk = it->val;
       TrackCand tkCand = TrackCand(0,tk);
@@ -222,7 +222,7 @@ vector<L3MuonTrajectoryBuilder::TrackCand> L3MuonTrajectoryBuilder::makeTkCandCo
       //
       tkCandColl.push_back(tkCand);
     }
-  }
+  }  
   
   //tkCandColl = chooseRegionalTrackerTracks(staCand,tkTrackCands);
   
