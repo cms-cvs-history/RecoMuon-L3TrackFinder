@@ -12,8 +12,8 @@
  *   in the muon system and the tracker.
  *
  *
- *  $Date: 2009/04/10 14:48:22 $
- *  $Revision: 1.15 $
+ *  $Date: 2009/07/29 12:21:11 $
+ *  $Revision: 1.16 $
  *
  *  Authors :
  *  N. Neumeister            Purdue University
@@ -111,7 +111,7 @@ MuonCandidate::CandidateContainer L3MuonTrajectoryBuilder::trajectories(const Tr
   const std::string category = "Muon|RecoMuon|L3MuonTrajectoryBuilder|trajectories";
   
   // cut on muons with low momenta
-  if ( (staCandIn).second->pt() < thePtCut || (staCandIn).second->innerMomentum().Rho() < thePtCut || (staCandIn).second->innerMomentum().R() < 2.5 ) return CandidateContainer();
+  LogTrace(category) << " STA pt " << staCandIn.second->pt() << " rho " << staCandIn.second->innerMomentum().Rho() << " R " << staCandIn.second->innerMomentum().R() << " theCut " << thePtCut;
   
   // convert the STA track into a Trajectory if Trajectory not already present
   TrackCand staCand(staCandIn);
